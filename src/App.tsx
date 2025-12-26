@@ -4,12 +4,17 @@ import "./App.css"
 import type { Assignment } from "@/models/assignment"
 import AddAssignmentCard from "./components/AddAssignmentCard";
 import AssignmentsCard from "./components/AssignmentsCard";
+import AddCourseCard from "./components/AddCourseCard";
+import type { Course } from "./models/course";
+import CourseCard from "./components/CourseCard";
 
 function App() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [newAssignmentName, setNewAssignmentName] = useState('');
   const [newAssignmentPtsPossible, setNewAssignmentPtsPossible] = useState<number | "">("");
   const [newAssignmentPtsEarned, setNewAssignmentPtsEarned] = useState<number | "">("");
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [newCourseName, setNewCourseName] = useState('');
   
   const addAssignment = () => {
     if (newAssignmentName.trim() === '') {
@@ -27,6 +32,20 @@ function App() {
     setNewAssignmentName('');
     setNewAssignmentPtsPossible("");
     setNewAssignmentPtsEarned("");
+  };
+
+  const addCourse = () => {
+    if (newCourseName.trim() === '') {
+      return;
+    }
+    const newId = Date.now();
+    const newCourseItem: Course = {
+      id: newId,
+      name: newCourseName,
+      assignments: [],
+    };
+    setCourses([...courses, newCourseItem]);
+    setNewCourseName('');
   };
 
   const removeAssignment = (id: number) => {
@@ -60,6 +79,12 @@ function App() {
 
   return (
     <div className="App">
+      <AddCourseCard
+        nameValue={newCourseName}
+        onNameChange={(e) => setNewCourseName(e.target.value)}
+        onAdd={addCourse}
+      />
+      {courses.map((course) => <CourseCard key={course.id} course={course} />)}
       <AddAssignmentCard
         nameValue={newAssignmentName}
         onNameChange={(e) => setNewAssignmentName(e.target.value)}
