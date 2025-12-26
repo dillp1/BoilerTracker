@@ -1,4 +1,15 @@
 import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from "./components/ui/button";
+import { Input } from "@/components/ui/input"
+import "./App.css"
 
 type TodoItem = {
   id: number;
@@ -39,10 +50,21 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>Todo App</h1>
-      <input type='text' value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />
-      <button onClick={addTodo} >Add Todo</button>
+    <div className="app">
+      <Card>
+        <CardHeader>
+          <CardTitle>Add a Todo</CardTitle>
+          <CardDescription>Add a new todo to the list</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Input type='text' placeholder='todo...' value={newTodo} onChange={(e) => setNewTodo(e.target.value)}></Input>
+        </CardContent>
+        <CardFooter className="flex-col">
+          <Button type='submit' className='w-full' onClick={addTodo}>
+            Add Todo
+          </Button>
+        </CardFooter>
+      </Card>
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
@@ -50,7 +72,13 @@ function App() {
             <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
               {todo.text}
             </span>
-            <button onClick={() => removeTodo(todo.id)}>Remove</button>
+            <button>Remove</button>
+            <Button
+              type="submit"
+              onClick={() => removeTodo(todo.id)}
+            >
+              Remove
+            </Button>
           </li>
         ))}
       </ul>
