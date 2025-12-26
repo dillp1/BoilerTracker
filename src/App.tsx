@@ -7,20 +7,23 @@ import AssignmentsCard from "./components/AssignmentsCard";
 
 function App() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [newAssignment, setNewAssignment] = useState('');
+  const [newAssignmentName, setNewAssignmentName] = useState('');
+  const [newAssignmentPtsPossible, setNewAssignmentPtsPossible] = useState<number>(0);
 
   const addAssignment = () => {
-    if (newAssignment.trim() === '') {
+    if (newAssignmentName.trim() === '') {
       return;
     }
     const newId = Date.now();
     const newAssignmentItem: Assignment = {
       id: newId,
-      text: newAssignment,
+      text: newAssignmentName,
       completed: false,
+      pointsPossible: newAssignmentPtsPossible,
     };
     setAssignments([...assignments, newAssignmentItem])
-    setNewAssignment('');
+    setNewAssignmentName('');
+    setNewAssignmentPtsPossible(0);
   };
 
   const removeAssignment = (id: number) => {
@@ -48,8 +51,10 @@ function App() {
   return (
     <div className="App">
       <AddAssignmentCard
-        value={newAssignment}
-        onChange={(e) => setNewAssignment(e.target.value)}
+        nameValue={newAssignmentName}
+        onNameChange={(e) => setNewAssignmentName(e.target.value)}
+        pointsValue={newAssignmentPtsPossible}
+        onPointsChange={(e) => setNewAssignmentPtsPossible(Number(e.target.value))}
         onAdd={addAssignment}
       />
       <AssignmentsCard

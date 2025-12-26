@@ -10,12 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 
 type AddAssignmentCardProps = {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  nameValue: string;
+  onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  pointsValue: number;
+  onPointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAdd: () => void;
 };
 
-const AddAssignmentCard = ({ value, onChange, onAdd }: AddAssignmentCardProps) => {
+const AddAssignmentCard = ({ nameValue, onNameChange, pointsValue, onPointsChange, onAdd }: AddAssignmentCardProps) => {
   return (
     <div>
       <Card>
@@ -23,12 +25,18 @@ const AddAssignmentCard = ({ value, onChange, onAdd }: AddAssignmentCardProps) =
           <CardTitle>Add an Assignment</CardTitle>
           <CardDescription>Add a new assignment to the list</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col gap-2">
           <Input
             type="text"
             placeholder="Assignment name"
-            value={value}
-            onChange={onChange}
+            value={nameValue}
+            onChange={onNameChange}
+          ></Input>
+          <Input
+            type="number"
+            placeholder="Pts possible"
+            value={pointsValue}
+            onChange={onPointsChange}
           ></Input>
         </CardContent>
         <CardFooter className="flex-col">

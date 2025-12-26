@@ -72,9 +72,14 @@ const AssignmentsCard = ({
                       className="h-8"
                     />
                   ) : (
-                    <span className={assignment.completed ? "text-slate-400 line-through" : "text-slate-800"}>
-                      {assignment.text}
-                    </span>
+                    <div className="flex items-center gap-2 flex-1">
+                      <span className={assignment.completed ? "text-slate-400 line-through" : "text-slate-800"}>
+                        {assignment.text}
+                      </span>
+                      <span className="ml-auto text-xs text-slate-500">
+                        {assignment.pointsPossible} pts
+                      </span>
+                    </div>
                   )}
                   <div className="ml-auto flex items-center gap-2">
                     {editingId === assignment.id ? (
