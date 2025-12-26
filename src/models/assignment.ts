@@ -3,4 +3,5 @@ export type Assignment = {
   text: string;
   completed: boolean;
   pointsPossible: number;
+  pointsEarned: number;
 }

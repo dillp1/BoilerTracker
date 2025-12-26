@@ -77,7 +77,7 @@ const AssignmentsCard = ({
                         {assignment.text}
                       </span>
                       <span className="ml-auto text-xs text-slate-500">
-                        {assignment.pointsPossible} pts
+                        {assignment.pointsEarned} / {assignment.pointsPossible} pts
                       </span>
                     </div>
                   )}

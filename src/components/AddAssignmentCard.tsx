@@ -15,10 +15,12 @@ type AddAssignmentCardProps = {
   onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   possiblePointsValue: number | "";
   onPossiblePointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  earnedPointsValue: number | "";
+  onEarnedPointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAdd: () => void;
 };
 
-const AddAssignmentCard = ({ nameValue, onNameChange, possiblePointsValue: pointsValue, onPossiblePointsChange: onPointsChange, onAdd }: AddAssignmentCardProps) => {
+const AddAssignmentCard = ({ nameValue, onNameChange, possiblePointsValue, onPossiblePointsChange, earnedPointsValue, onEarnedPointsChange, onAdd }: AddAssignmentCardProps) => {
   return (
     <div>
       <Card>
@@ -44,8 +46,8 @@ const AddAssignmentCard = ({ nameValue, onNameChange, possiblePointsValue: point
               <Input
                 type="number"
                 placeholder="0"
-                // value={}
-                // onChange={}
+                value={earnedPointsValue}
+                onChange={onEarnedPointsChange}
               ></Input>
             </div>
             <div className="pb-2 text-lg font-semibold">/</div>
@@ -56,8 +58,8 @@ const AddAssignmentCard = ({ nameValue, onNameChange, possiblePointsValue: point
               <Input
                 type="number"
                 placeholder="100"
-                value={pointsValue}
-                onChange={onPointsChange}
+                value={possiblePointsValue}
+                onChange={onPossiblePointsChange}
               ></Input>
             </div>
           </div>

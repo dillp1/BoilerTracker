@@ -9,6 +9,7 @@ function App() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [newAssignmentName, setNewAssignmentName] = useState('');
   const [newAssignmentPtsPossible, setNewAssignmentPtsPossible] = useState<number | "">("");
+  const [newAssignmentPtsEarned, setNewAssignmentPtsEarned] = useState<number | "">("");
   
   const addAssignment = () => {
     if (newAssignmentName.trim() === '') {
@@ -20,10 +21,12 @@ function App() {
       text: newAssignmentName,
       completed: false,
       pointsPossible: newAssignmentPtsPossible === "" ? 100 : newAssignmentPtsPossible,
+      pointsEarned: newAssignmentPtsEarned === "" ? 0 : newAssignmentPtsEarned,
     };
     setAssignments([...assignments, newAssignmentItem])
     setNewAssignmentName('');
     setNewAssignmentPtsPossible("");
+    setNewAssignmentPtsEarned("");
   };
 
   const removeAssignment = (id: number) => {
@@ -56,6 +59,10 @@ function App() {
         possiblePointsValue={newAssignmentPtsPossible}
         onPossiblePointsChange={(e) =>
           setNewAssignmentPtsPossible(e.target.value === "" ? "" : Number(e.target.value))
+        }
+        earnedPointsValue={newAssignmentPtsEarned}
+        onEarnedPointsChange={(e) =>
+          setNewAssignmentPtsEarned(e.target.value === "" ? "" : Number(e.target.value))
         }
         onAdd={addAssignment}
       />
