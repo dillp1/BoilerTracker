@@ -22,6 +22,8 @@ type Assignment = {
 function App() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [newAssignment, setNewAssignment] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState('');
 
   const addAssignment = () => {
     if (newAssignment !== '') {
@@ -40,6 +42,27 @@ function App() {
     const updatedAssignments = assignments.filter((assignment) => assignment.id !== id);
     setAssignments(updatedAssignments);
   }
+
+  const startEdit = (assignment: Assignment) => {
+    setEditingId(assignment.id);
+    setEditingText(assignment.text);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingText('');
+  };
+
+  const saveEdit = (id: number) => {
+    if (editingText.trim() === '') {
+      return;
+    }
+    const updatedAssignments = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, text: editingText } : assignment
+    );
+    setAssignments(updatedAssignments);
+    cancelEdit();
+  };
 
   const toggleComplete = (id: number) => {
     const updatedAssignments = assignments.map((assignment) => {
@@ -83,17 +106,47 @@ function App() {
                     onChange={() => toggleComplete(assignment.id)}
                     className="h-4 w-4 accent-slate-700"
                   />
-                  <span className={assignment.completed ? "text-slate-400 line-through" : "text-slate-800"}>
-                    {assignment.text}
-                  </span>
+                  {editingId === assignment.id ? (
+                    <Input
+                      type="text"
+                      value={editingText}
+                      onChange={(e) => setEditingText(e.target.value)}
+                      className="h-8"
+                    />
+                  ) : (
+                    <span className={assignment.completed ? "text-slate-400 line-through" : "text-slate-800"}>
+                      {assignment.text}
+                    </span>
+                  )}
                   <div className="ml-auto flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon-sm"
-                    >
-                      <PenLine />
-                    </Button>
+                    {editingId === assignment.id ? (
+                      <>
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => saveEdit(assignment.id)}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={cancelEdit}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon-sm"
+                        onClick={() => startEdit(assignment)}
+                      >
+                        <PenLine />
+                      </Button>
+                    )}
                     <Button
                       type="button"
                       variant="destructive"
