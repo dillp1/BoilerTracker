@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -12,12 +11,8 @@ import { Input } from "@/components/ui/input"
 import "./App.css"
 
 import { PenLine } from "lucide-react"
-
-type Assignment = {
-  id: number;
-  text: string;
-  completed: boolean;
-}
+import type { Assignment } from "@/models/assignment"
+import AddAssignmentCard from "./components/AddAssignmentCard";
 
 function App() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -26,16 +21,17 @@ function App() {
   const [editingText, setEditingText] = useState('');
 
   const addAssignment = () => {
-    if (newAssignment !== '') {
-      const newId = Date.now();
-      const newAssignmentItem: Assignment = {
-        id: newId,
-        text: newAssignment,
-        completed: false,
-      };
-      setAssignments([...assignments, newAssignmentItem])
-      setNewAssignment('');
+    if (newAssignment.trim() === '') {
+      return;
     }
+    const newId = Date.now();
+    const newAssignmentItem: Assignment = {
+      id: newId,
+      text: newAssignment,
+      completed: false,
+    };
+    setAssignments([...assignments, newAssignmentItem])
+    setNewAssignment('');
   };
 
   const removeAssignment = (id: number) => {
@@ -76,20 +72,11 @@ function App() {
 
   return (
     <div className="App">
-      <Card>
-        <CardHeader>
-          <CardTitle>Add an Assignment</CardTitle>
-          <CardDescription>Add a new assignment to the list</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Input type='text' placeholder='Assignment name' value={newAssignment} onChange={(e) => setNewAssignment(e.target.value)}></Input>
-        </CardContent>
-        <CardFooter className="flex-col">
-          <Button type='submit' className='w-full' onClick={addAssignment}>
-            Add Assignment
-          </Button>
-        </CardFooter>
-      </Card>
+      <AddAssignmentCard
+        value={newAssignment}
+        onChange={(e) => setNewAssignment(e.target.value)}
+        onAdd={addAssignment}
+      />
       <Card>
         <CardHeader>
           <CardTitle>Assignment List</CardTitle>
