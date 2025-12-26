@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label"
 type AddAssignmentCardProps = {
   nameValue: string;
   onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  pointsValue: number;
+  pointsValue: number | "";
   onPointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAdd: () => void;
 };
@@ -27,19 +27,40 @@ const AddAssignmentCard = ({ nameValue, onNameChange, pointsValue, onPointsChang
           <CardDescription>Add a new assignment to the list</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
-          <Label>Assignment Name</Label>
+          <Label>
+            Assignment Name
+          </Label>
           <Input
             type="text"
             placeholder="Homework 1"
             value={nameValue}
             onChange={onNameChange}
           ></Input>
-          <Label>Points Possible</Label>
-          <Input
-            type="number"
-            value={pointsValue}
-            onChange={onPointsChange}
-          ></Input>
+          <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3">
+            <div className="flex flex-col gap-1">
+              <Label>
+                Points Earned
+              </Label>
+              <Input
+                type="number"
+                placeholder="0"
+                // value={}
+                // onChange={}
+              ></Input>
+            </div>
+            <div className="pb-2 text-lg font-semibold">/</div>
+            <div className="flex flex-col gap-1">
+              <Label>
+                Points Possible
+              </Label>
+              <Input
+                type="number"
+                placeholder="100"
+                value={pointsValue}
+                onChange={onPointsChange}
+              ></Input>
+            </div>
+          </div>
         </CardContent>
         <CardFooter className="flex-col">
           <Button type="button" className="w-full" onClick={onAdd}>

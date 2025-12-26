@@ -8,8 +8,8 @@ import AssignmentsCard from "./components/AssignmentsCard";
 function App() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [newAssignmentName, setNewAssignmentName] = useState('');
-  const [newAssignmentPtsPossible, setNewAssignmentPtsPossible] = useState<number>(0);
-
+  const [newAssignmentPtsPossible, setNewAssignmentPtsPossible] = useState<number | "">("");
+  
   const addAssignment = () => {
     if (newAssignmentName.trim() === '') {
       return;
@@ -19,11 +19,11 @@ function App() {
       id: newId,
       text: newAssignmentName,
       completed: false,
-      pointsPossible: newAssignmentPtsPossible,
+      pointsPossible: newAssignmentPtsPossible === "" ? 0 : newAssignmentPtsPossible,
     };
     setAssignments([...assignments, newAssignmentItem])
     setNewAssignmentName('');
-    setNewAssignmentPtsPossible(0);
+    setNewAssignmentPtsPossible("");
   };
 
   const removeAssignment = (id: number) => {
@@ -54,7 +54,9 @@ function App() {
         nameValue={newAssignmentName}
         onNameChange={(e) => setNewAssignmentName(e.target.value)}
         pointsValue={newAssignmentPtsPossible}
-        onPointsChange={(e) => setNewAssignmentPtsPossible(Number(e.target.value))}
+        onPointsChange={(e) =>
+          setNewAssignmentPtsPossible(e.target.value === "" ? "" : Number(e.target.value))
+        }
         onAdd={addAssignment}
       />
       <AssignmentsCard
