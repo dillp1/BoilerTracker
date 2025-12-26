@@ -11,86 +11,98 @@ import { Button } from "./components/ui/button";
 import { Input } from "@/components/ui/input"
 import "./App.css"
 
-type TodoItem = {
+import { PenLine } from "lucide-react"
+
+type Assignment = {
   id: number;
   text: string;
   completed: boolean;
 }
 
 function App() {
-  const [todos, setTodos] = useState<TodoItem[]>([]);
-  const [newTodo, setNewTodo] = useState('');
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [newAssignment, setNewAssignment] = useState('');
 
-  const addTodo = () => {
-    if (newTodo !== '') {
+  const addAssignment = () => {
+    if (newAssignment !== '') {
       const newId = Date.now();
-      const newTodoItem: TodoItem = {
+      const newAssignmentItem: Assignment = {
         id: newId,
-        text: newTodo,
+        text: newAssignment,
         completed: false,
       };
-      setTodos([...todos, newTodoItem])
-      setNewTodo('');
+      setAssignments([...assignments, newAssignmentItem])
+      setNewAssignment('');
     }
   };
 
-  const removeTodo = (id: number) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
+  const removeAssignment = (id: number) => {
+    const updatedAssignments = assignments.filter((assignment) => assignment.id !== id);
+    setAssignments(updatedAssignments);
   }
 
   const toggleComplete = (id: number) => {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, completed: !todo.completed }
+    const updatedAssignments = assignments.map((assignment) => {
+      if (assignment.id === id) {
+        return { ...assignment, completed: !assignment.completed }
       }
-      return todo;
+      return assignment;
     });
-    setTodos(updatedTodos);
+    setAssignments(updatedAssignments);
   }
 
   return (
     <div className="App">
       <Card>
         <CardHeader>
-          <CardTitle>Add a Todo</CardTitle>
-          <CardDescription>Add a new todo to the list</CardDescription>
+          <CardTitle>Add an Assignment</CardTitle>
+          <CardDescription>Add a new assignment to the list</CardDescription>
         </CardHeader>
         <CardContent>
-          <Input type='text' placeholder='todo...' value={newTodo} onChange={(e) => setNewTodo(e.target.value)}></Input>
+          <Input type='text' placeholder='Assignment name' value={newAssignment} onChange={(e) => setNewAssignment(e.target.value)}></Input>
         </CardContent>
         <CardFooter className="flex-col">
-          <Button type='submit' className='w-full' onClick={addTodo}>
-            Add Todo
+          <Button type='submit' className='w-full' onClick={addAssignment}>
+            Add Assignment
           </Button>
         </CardFooter>
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Todo List</CardTitle>
-          <CardDescription>Here are your Todos</CardDescription>
+          <CardTitle>Assignment List</CardTitle>
+          <CardDescription>Here are your assignments</CardDescription>
         </CardHeader>
         <CardContent>
           <ul>
-            {todos.map((todo) => (
-              <li key={todo.id}>
+            {assignments.map((assignment) => (
+              <li key={assignment.id}>
                 <div className="flex items-center gap-3 rounded-md border border-slate-200 bg-white px-3 py-2 shadow-sm hover:bg-slate-50">
                   <input
                     type='checkbox'
-                    checked={todo.completed}
-                    onChange={() => toggleComplete(todo.id)}
+                    checked={assignment.completed}
+                    onChange={() => toggleComplete(assignment.id)}
                     className="h-4 w-4 accent-slate-700"
                   />
-                  <span className={todo.completed ? "text-slate-400 line-through" : "text-slate-800"}>
-                    {todo.text}
+                  <span className={assignment.completed ? "text-slate-400 line-through" : "text-slate-800"}>
+                    {assignment.text}
                   </span>
-                  <Button
-                    type="submit"
-                    onClick={() => removeTodo(todo.id)}
-                    className="ml-auto"
-                  >
-                    Remove
-                  </Button>
+                  <div className="ml-auto flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon-sm"
+                    >
+                      <PenLine />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => removeAssignment(assignment.id)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 </div>
               </li>
             ))}
