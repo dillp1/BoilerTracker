@@ -13,12 +13,12 @@ import { Label } from "@/components/ui/label"
 type AddAssignmentCardProps = {
   nameValue: string;
   onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  pointsValue: number | "";
-  onPointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  possiblePointsValue: number | "";
+  onPossiblePointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onAdd: () => void;
 };
 
-const AddAssignmentCard = ({ nameValue, onNameChange, pointsValue, onPointsChange, onAdd }: AddAssignmentCardProps) => {
+const AddAssignmentCard = ({ nameValue, onNameChange, possiblePointsValue: pointsValue, onPossiblePointsChange: onPointsChange, onAdd }: AddAssignmentCardProps) => {
   return (
     <div>
       <Card>

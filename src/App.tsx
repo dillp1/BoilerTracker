@@ -19,7 +19,7 @@ function App() {
       id: newId,
       text: newAssignmentName,
       completed: false,
-      pointsPossible: newAssignmentPtsPossible === "" ? 0 : newAssignmentPtsPossible,
+      pointsPossible: newAssignmentPtsPossible === "" ? 100 : newAssignmentPtsPossible,
     };
     setAssignments([...assignments, newAssignmentItem])
     setNewAssignmentName('');
@@ -53,8 +53,8 @@ function App() {
       <AddAssignmentCard
         nameValue={newAssignmentName}
         onNameChange={(e) => setNewAssignmentName(e.target.value)}
-        pointsValue={newAssignmentPtsPossible}
-        onPointsChange={(e) =>
+        possiblePointsValue={newAssignmentPtsPossible}
+        onPossiblePointsChange={(e) =>
           setNewAssignmentPtsPossible(e.target.value === "" ? "" : Number(e.target.value))
         }
         onAdd={addAssignment}
