@@ -51,6 +51,13 @@ function App() {
     setAssignments(updatedAssignments);
   };
 
+  const updateAssignmentPoints = (id: number, pointsEarned: number, pointsPossible: number) => {
+    const updatedAssignments = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, pointsEarned, pointsPossible } : assignment
+    );
+    setAssignments(updatedAssignments);
+  };
+
   return (
     <div className="App">
       <AddAssignmentCard
@@ -71,6 +78,7 @@ function App() {
         onRemove={removeAssignment}
         onToggleComplete={toggleComplete}
         onUpdateText={updateAssignmentText}
+        onUpdatePoints={updateAssignmentPoints}
       />
     </div>
   )
