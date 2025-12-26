@@ -53,6 +53,11 @@ function App() {
     setAssignments(updatedAssignments);
   }
 
+  const removeCourse = (id: number) => {
+    const updatedCourses = courses.filter((course) => course.id !== id);
+    setCourses(updatedCourses);
+  }
+
   const toggleComplete = (id: number) => {
     const updatedAssignments = assignments.map((assignment) => {
       if (assignment.id === id) {
@@ -84,7 +89,13 @@ function App() {
         onNameChange={(e) => setNewCourseName(e.target.value)}
         onAdd={addCourse}
       />
-      {courses.map((course) => <CourseCard key={course.id} course={course} />)}
+      {courses.map((course) =>
+        <CourseCard
+          key={course.id}
+          course={course}
+          onRemove={removeCourse}
+        />
+      )}
       <AddAssignmentCard
         nameValue={newAssignmentName}
         onNameChange={(e) => setNewAssignmentName(e.target.value)}
