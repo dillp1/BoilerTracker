@@ -50,7 +50,7 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className="App">
       <Card>
         <CardHeader>
           <CardTitle>Add a Todo</CardTitle>
@@ -65,23 +65,38 @@ function App() {
           </Button>
         </CardFooter>
       </Card>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <input type='checkbox' checked={todo.completed} onChange={() => toggleComplete(todo.id)} />
-            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
-              {todo.text}
-            </span>
-            <button>Remove</button>
-            <Button
-              type="submit"
-              onClick={() => removeTodo(todo.id)}
-            >
-              Remove
-            </Button>
-          </li>
-        ))}
-      </ul>
+      <Card>
+        <CardHeader>
+          <CardTitle>Todo List</CardTitle>
+          <CardDescription>Here are your Todos</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ul>
+            {todos.map((todo) => (
+              <li key={todo.id}>
+                <div className="flex items-center gap-3 rounded-md border border-slate-200 bg-white px-3 py-2 shadow-sm hover:bg-slate-50">
+                  <input
+                    type='checkbox'
+                    checked={todo.completed}
+                    onChange={() => toggleComplete(todo.id)}
+                    className="h-4 w-4 accent-slate-700"
+                  />
+                  <span className={todo.completed ? "text-slate-400 line-through" : "text-slate-800"}>
+                    {todo.text}
+                  </span>
+                  <Button
+                    type="submit"
+                    onClick={() => removeTodo(todo.id)}
+                    className="ml-auto"
+                  >
+                    Remove
+                  </Button>
+                </div>
+              </li>
+            ))}
+            </ul>
+          </CardContent>
+        </Card>
     </div>
   )
 }
