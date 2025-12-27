@@ -13,6 +13,12 @@ import AssignmentsCard from "./AssignmentsCard";
 type CourseCardProps = {
   course: Course;
   onRemove: (id: number) => void;
+  onAddAssignment: (
+    courseId: number,
+    name: string,
+    pointsEarned: number | "",
+    pointsPossible: number | ""
+  ) => void;
   onRemoveAssignment: (courseId: number, assignmentId: number) => void;
   onToggleComplete: (courseId: number, assignmentId: number) => void;
   onUpdateAssignmentText: (courseId: number, assignmentId: number, text: string) => void;
@@ -22,6 +28,7 @@ type CourseCardProps = {
 const CourseCard = ({
   course,
   onRemove,
+  onAddAssignment,
   onRemoveAssignment,
   onToggleComplete,
   onUpdateAssignmentText,
@@ -39,7 +46,10 @@ const CourseCard = ({
         </CardHeader>
         <CardContent>
           <AssignmentsCard
+            courseId={course.id}
+            courseName={course.name}
             assignments={course.assignments}
+            onAddAssignment={onAddAssignment}
             onRemove={(assignmentId) => onRemoveAssignment(course.id, assignmentId)}
             onToggleComplete={(assignmentId) => onToggleComplete(course.id, assignmentId)}
             onUpdateText={(assignmentId, text) => onUpdateAssignmentText(course.id, assignmentId, text)}

@@ -2,44 +2,38 @@ import { useState } from "react";
 import "./App.css"
 
 import type { Assignment } from "@/models/assignment"
-import AddAssignmentCard from "./components/AddAssignmentCard";
 import AddCourseCard from "./components/AddCourseCard";
 import type { Course } from "./models/course";
 import CourseCard from "./components/CourseCard";
 
 function App() {
-  const [newAssignmentName, setNewAssignmentName] = useState('');
-  const [newAssignmentPtsPossible, setNewAssignmentPtsPossible] = useState<number | "">("");
-  const [newAssignmentPtsEarned, setNewAssignmentPtsEarned] = useState<number | "">("");
   const [courses, setCourses] = useState<Course[]>([]);
   const [newCourseName, setNewCourseName] = useState('');
-  const [selectedCourseId, setSelectedCourseId] = useState<number | "">("");
   
-  const addAssignment = () => {
-    if (selectedCourseId === "") {
-      return;
-    }
-    if (newAssignmentName.trim() === '') {
+  const addAssignment = (
+    courseId: number,
+    name: string,
+    pointsEarned: number | "",
+    pointsPossible: number | ""
+  ) => {
+    if (name.trim() === '') {
       return;
     }
     const newId = Date.now();
     const newAssignmentItem: Assignment = {
       id: newId,
-      text: newAssignmentName,
+      text: name,
       completed: false,
-      pointsPossible: newAssignmentPtsPossible === "" ? 100 : newAssignmentPtsPossible,
-      pointsEarned: newAssignmentPtsEarned === "" ? 0 : newAssignmentPtsEarned,
+      pointsPossible: pointsPossible === "" ? 100 : pointsPossible,
+      pointsEarned: pointsEarned === "" ? 0 : pointsEarned,
     };
     setCourses(
       courses.map((course) =>
-        course.id === selectedCourseId
+        course.id === courseId
           ? { ...course, assignments: [...course.assignments, newAssignmentItem] }
           : course
       )
     );
-    setNewAssignmentName('');
-    setNewAssignmentPtsPossible("");
-    setNewAssignmentPtsEarned("");
   };
 
   const addCourse = () => {
@@ -128,27 +122,12 @@ function App() {
         onNameChange={(e) => setNewCourseName(e.target.value)}
         onAdd={addCourse}
       />
-      <AddAssignmentCard
-        nameValue={newAssignmentName}
-        onNameChange={(e) => setNewAssignmentName(e.target.value)}
-        possiblePointsValue={newAssignmentPtsPossible}
-        onPossiblePointsChange={(e) =>
-          setNewAssignmentPtsPossible(e.target.value === "" ? "" : Number(e.target.value))
-        }
-        earnedPointsValue={newAssignmentPtsEarned}
-        onEarnedPointsChange={(e) =>
-          setNewAssignmentPtsEarned(e.target.value === "" ? "" : Number(e.target.value))
-        }
-        selectedCourseId={selectedCourseId}
-        onCourseChange={(value) => setSelectedCourseId(value === "" ? "" : Number(value))}
-        courses={courses}
-        onAdd={addAssignment}
-      />
       {courses.map((course) =>
         <CourseCard
           key={course.id}
           course={course}
           onRemove={removeCourse}
+          onAddAssignment={addAssignment}
           onRemoveAssignment={removeAssignment}
           onToggleComplete={toggleComplete}
           onUpdateAssignmentPoints={updateAssignmentPoints}

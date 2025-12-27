@@ -6,52 +6,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectGroup,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { Label } from "@/components/ui/label"
-import type { Course } from "@/models/course";
 
 type AddAssignmentCardProps = {
+  courseName?: string;
+  showHeader?: boolean;
   nameValue: string;
   onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   possiblePointsValue: number | "";
   onPossiblePointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   earnedPointsValue: number | "";
   onEarnedPointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  selectedCourseId: number | "";
-  onCourseChange: (value: string) => void;
-  courses: Course[];
   onAdd: () => void;
 };
 
 const AddAssignmentCard = ({
+  courseName,
+  showHeader = true,
   nameValue,
   onNameChange,
   possiblePointsValue,
   onPossiblePointsChange,
   earnedPointsValue,
   onEarnedPointsChange,
-  selectedCourseId,
-  onCourseChange,
-  courses,
   onAdd
 }: AddAssignmentCardProps) => {
   return (
     <div>
       <Card>
-        <CardHeader>
-          <CardTitle>Add an Assignment</CardTitle>
-          <CardDescription>Add a new assignment to the list</CardDescription>
-        </CardHeader>
+        {showHeader && (
+          <CardHeader>
+            <CardTitle>Add an Assignment</CardTitle>
+            <CardDescription>
+              {courseName ? `Add a new assignment to ${courseName}` : "Add a new assignment to the list"}
+            </CardDescription>
+          </CardHeader>
+        )}
         <CardContent className="flex flex-col gap-2">
           <Label>
             Assignment Name
@@ -87,30 +79,14 @@ const AddAssignmentCard = ({
               ></Input>
             </div>
           </div>
-          <Label>
-            Select a course
-          </Label>
-          <Select
-            value={selectedCourseId === "" ? "" : String(selectedCourseId)}
-            onValueChange={onCourseChange}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Courses" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Courses</SelectLabel>
-                {courses.map((course) => (
-                  <SelectItem key={course.id} value={String(course.id)}>
-                    {course.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
         </CardContent>
         <CardFooter className="flex-col">
-          <Button type="button" className="w-full" onClick={onAdd} disabled={selectedCourseId === ""}>
+          <Button
+            type="button"
+            className="w-full"
+            onClick={onAdd}
+            disabled={nameValue.trim() === ""}
+          >
             Add Assignment
           </Button>
         </CardFooter>

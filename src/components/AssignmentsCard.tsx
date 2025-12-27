@@ -1,19 +1,37 @@
 import { useState } from "react";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 
-import { PenLine } from "lucide-react"
+import { PenLine, Plus } from "lucide-react"
 import type { Assignment } from "@/models/assignment";
 import { Button } from "./ui/button";
+import AddAssignmentCard from "./AddAssignmentCard";
 
 type AssignmentsCardProps = {
+  courseId: number;
+  courseName?: string;
   assignments: Assignment[];
+  onAddAssignment: (
+    courseId: number,
+    name: string,
+    pointsEarned: number | "",
+    pointsPossible: number | ""
+  ) => void;
   onRemove: (id: number) => void;
   onToggleComplete: (id: number) => void;
   onUpdateText: (id: number, text: string) => void;
@@ -21,16 +39,35 @@ type AssignmentsCardProps = {
 };
 
 const AssignmentsCard = ({
+  courseId,
+  courseName,
   assignments,
+  onAddAssignment,
   onRemove,
   onToggleComplete,
   onUpdateText,
   onUpdatePoints,
 }: AssignmentsCardProps) => {
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState('');
   const [editingPtsEarned, setEditingPtsEarned] = useState<number | "">("");
   const [editingPtsPossible, setEditingPtsPossible] = useState<number | "">("");
+
+  const [newAssignmentName, setNewAssignmentName] = useState('');
+  const [newAssignmentPtsPossible, setNewAssignmentPtsPossible] = useState<number | "">("");
+  const [newAssignmentPtsEarned, setNewAssignmentPtsEarned] = useState<number | "">("");
+  const handleAddAssignment = () => {
+    if (newAssignmentName.trim() === '') {
+      return;
+    }
+    onAddAssignment(courseId, newAssignmentName, newAssignmentPtsEarned, newAssignmentPtsPossible);
+    setNewAssignmentName('');
+    setNewAssignmentPtsPossible("");
+    setNewAssignmentPtsEarned("");
+    setIsAddOpen(false);
+  };
+
 
   const startEdit = (assignment: Assignment) => {
     setEditingId(assignment.id);
@@ -65,6 +102,38 @@ const AssignmentsCard = ({
         <CardHeader>
           <CardTitle>Assignment List</CardTitle>
           <CardDescription>Here are your assignments</CardDescription>
+          <CardAction>
+            <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Plus />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add an assignment</DialogTitle>
+                  <DialogDescription>
+                    {courseName ? `Add a new assignment to ${courseName}.` : "Add a new assignment to this course."}
+                  </DialogDescription>
+                </DialogHeader>
+                <AddAssignmentCard
+                  courseName={courseName}
+                  showHeader={false}
+                  nameValue={newAssignmentName}
+                  onNameChange={(e) => setNewAssignmentName(e.target.value)}
+                  possiblePointsValue={newAssignmentPtsPossible}
+                  onPossiblePointsChange={(e) =>
+                    setNewAssignmentPtsPossible(e.target.value === "" ? "" : Number(e.target.value))
+                  }
+                  earnedPointsValue={newAssignmentPtsEarned}
+                  onEarnedPointsChange={(e) =>
+                    setNewAssignmentPtsEarned(e.target.value === "" ? "" : Number(e.target.value))
+                  }
+                  onAdd={handleAddAssignment}
+                />
+              </DialogContent>
+            </Dialog>
+          </CardAction>
         </CardHeader>
         <CardContent>
           <ul>
