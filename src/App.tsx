@@ -3,20 +3,22 @@ import "./App.css"
 
 import type { Assignment } from "@/models/assignment"
 import AddAssignmentCard from "./components/AddAssignmentCard";
-import AssignmentsCard from "./components/AssignmentsCard";
 import AddCourseCard from "./components/AddCourseCard";
 import type { Course } from "./models/course";
 import CourseCard from "./components/CourseCard";
 
 function App() {
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [newAssignmentName, setNewAssignmentName] = useState('');
   const [newAssignmentPtsPossible, setNewAssignmentPtsPossible] = useState<number | "">("");
   const [newAssignmentPtsEarned, setNewAssignmentPtsEarned] = useState<number | "">("");
   const [courses, setCourses] = useState<Course[]>([]);
   const [newCourseName, setNewCourseName] = useState('');
+  const [selectedCourseId, setSelectedCourseId] = useState<number | "">("");
   
   const addAssignment = () => {
+    if (selectedCourseId === "") {
+      return;
+    }
     if (newAssignmentName.trim() === '') {
       return;
     }
@@ -28,7 +30,13 @@ function App() {
       pointsPossible: newAssignmentPtsPossible === "" ? 100 : newAssignmentPtsPossible,
       pointsEarned: newAssignmentPtsEarned === "" ? 0 : newAssignmentPtsEarned,
     };
-    setAssignments([...assignments, newAssignmentItem])
+    setCourses(
+      courses.map((course) =>
+        course.id === selectedCourseId
+          ? { ...course, assignments: [...course.assignments, newAssignmentItem] }
+          : course
+      )
+    );
     setNewAssignmentName('');
     setNewAssignmentPtsPossible("");
     setNewAssignmentPtsEarned("");
@@ -48,9 +56,14 @@ function App() {
     setNewCourseName('');
   };
 
-  const removeAssignment = (id: number) => {
-    const updatedAssignments = assignments.filter((assignment) => assignment.id !== id);
-    setAssignments(updatedAssignments);
+  const removeAssignment = (courseId: number, assignmentId: number) => {
+    setCourses(
+      courses.map((course) =>
+        course.id === courseId
+          ? { ...course, assignments: course.assignments.filter((assignment) => assignment.id !== assignmentId) }
+          : course
+      )
+    );
   }
 
   const removeCourse = (id: number) => {
@@ -58,28 +71,54 @@ function App() {
     setCourses(updatedCourses);
   }
 
-  const toggleComplete = (id: number) => {
-    const updatedAssignments = assignments.map((assignment) => {
-      if (assignment.id === id) {
-        return { ...assignment, completed: !assignment.completed }
-      }
-      return assignment;
-    });
-    setAssignments(updatedAssignments);
+  const toggleComplete = (courseId: number, assignmentId: number) => {
+    setCourses(
+      courses.map((course) =>
+        course.id === courseId
+          ? {
+              ...course,
+              assignments: course.assignments.map((assignment) =>
+                assignment.id === assignmentId ? { ...assignment, completed: !assignment.completed } : assignment
+              ),
+            }
+          : course
+      )
+    );
   }
 
-  const updateAssignmentText = (id: number, text: string) => {
-    const updatedAssignments = assignments.map((assignment) =>
-      assignment.id === id ? { ...assignment, text } : assignment
+  const updateAssignmentText = (courseId: number, assignmentId: number, text: string) => {
+    setCourses(
+      courses.map((course) =>
+        course.id === courseId
+          ? {
+              ...course,
+              assignments: course.assignments.map((assignment) =>
+                assignment.id === assignmentId ? { ...assignment, text } : assignment
+              ),
+            }
+          : course
+      )
     );
-    setAssignments(updatedAssignments);
   };
 
-  const updateAssignmentPoints = (id: number, pointsEarned: number, pointsPossible: number) => {
-    const updatedAssignments = assignments.map((assignment) =>
-      assignment.id === id ? { ...assignment, pointsEarned, pointsPossible } : assignment
+  const updateAssignmentPoints = (
+    courseId: number,
+    assignmentId: number,
+    pointsEarned: number,
+    pointsPossible: number
+  ) => {
+    setCourses(
+      courses.map((course) =>
+        course.id === courseId
+          ? {
+              ...course,
+              assignments: course.assignments.map((assignment) =>
+                assignment.id === assignmentId ? { ...assignment, pointsEarned, pointsPossible } : assignment
+              ),
+            }
+          : course
+      )
     );
-    setAssignments(updatedAssignments);
   };
 
   return (
@@ -89,13 +128,6 @@ function App() {
         onNameChange={(e) => setNewCourseName(e.target.value)}
         onAdd={addCourse}
       />
-      {courses.map((course) =>
-        <CourseCard
-          key={course.id}
-          course={course}
-          onRemove={removeCourse}
-        />
-      )}
       <AddAssignmentCard
         nameValue={newAssignmentName}
         onNameChange={(e) => setNewAssignmentName(e.target.value)}
@@ -107,15 +139,22 @@ function App() {
         onEarnedPointsChange={(e) =>
           setNewAssignmentPtsEarned(e.target.value === "" ? "" : Number(e.target.value))
         }
+        selectedCourseId={selectedCourseId}
+        onCourseChange={(value) => setSelectedCourseId(value === "" ? "" : Number(value))}
+        courses={courses}
         onAdd={addAssignment}
       />
-      <AssignmentsCard
-        assignments={assignments}
-        onRemove={removeAssignment}
-        onToggleComplete={toggleComplete}
-        onUpdateText={updateAssignmentText}
-        onUpdatePoints={updateAssignmentPoints}
-      />
+      {courses.map((course) =>
+        <CourseCard
+          key={course.id}
+          course={course}
+          onRemove={removeCourse}
+          onRemoveAssignment={removeAssignment}
+          onToggleComplete={toggleComplete}
+          onUpdateAssignmentPoints={updateAssignmentPoints}
+          onUpdateAssignmentText={updateAssignmentText}
+        />
+      )}
     </div>
   )
 }

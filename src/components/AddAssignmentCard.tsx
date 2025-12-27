@@ -6,9 +6,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectGroup,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { Label } from "@/components/ui/label"
+import type { Course } from "@/models/course";
 
 type AddAssignmentCardProps = {
   nameValue: string;
@@ -17,10 +27,24 @@ type AddAssignmentCardProps = {
   onPossiblePointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   earnedPointsValue: number | "";
   onEarnedPointsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedCourseId: number | "";
+  onCourseChange: (value: string) => void;
+  courses: Course[];
   onAdd: () => void;
 };
 
-const AddAssignmentCard = ({ nameValue, onNameChange, possiblePointsValue, onPossiblePointsChange, earnedPointsValue, onEarnedPointsChange, onAdd }: AddAssignmentCardProps) => {
+const AddAssignmentCard = ({
+  nameValue,
+  onNameChange,
+  possiblePointsValue,
+  onPossiblePointsChange,
+  earnedPointsValue,
+  onEarnedPointsChange,
+  selectedCourseId,
+  onCourseChange,
+  courses,
+  onAdd
+}: AddAssignmentCardProps) => {
   return (
     <div>
       <Card>
@@ -63,9 +87,30 @@ const AddAssignmentCard = ({ nameValue, onNameChange, possiblePointsValue, onPos
               ></Input>
             </div>
           </div>
+          <Label>
+            Select a course
+          </Label>
+          <Select
+            value={selectedCourseId === "" ? "" : String(selectedCourseId)}
+            onValueChange={onCourseChange}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Courses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Courses</SelectLabel>
+                {courses.map((course) => (
+                  <SelectItem key={course.id} value={String(course.id)}>
+                    {course.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </CardContent>
         <CardFooter className="flex-col">
-          <Button type="button" className="w-full" onClick={onAdd}>
+          <Button type="button" className="w-full" onClick={onAdd} disabled={selectedCourseId === ""}>
             Add Assignment
           </Button>
         </CardFooter>
