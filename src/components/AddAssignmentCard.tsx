@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 
 type AddAssignmentCardProps = {
   courseName?: string;
@@ -31,7 +31,7 @@ const AddAssignmentCard = ({
   onPossiblePointsChange,
   earnedPointsValue,
   onEarnedPointsChange,
-  onAdd
+  onAdd,
 }: AddAssignmentCardProps) => {
   return (
     <div>
@@ -40,14 +40,14 @@ const AddAssignmentCard = ({
           <CardHeader>
             <CardTitle>Add an Assignment</CardTitle>
             <CardDescription>
-              {courseName ? `Add a new assignment to ${courseName}` : "Add a new assignment to the list"}
+              {courseName
+                ? `Add a new assignment to ${courseName}`
+                : "Add a new assignment to the list"}
             </CardDescription>
           </CardHeader>
         )}
         <CardContent className="flex flex-col gap-2">
-          <Label>
-            Assignment Name
-          </Label>
+          <Label>Assignment Name</Label>
           <Input
             type="text"
             placeholder="Homework 1"
@@ -56,9 +56,7 @@ const AddAssignmentCard = ({
           ></Input>
           <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3">
             <div className="flex flex-col gap-1">
-              <Label>
-                Points Earned
-              </Label>
+              <Label>Points Earned</Label>
               <Input
                 type="number"
                 placeholder="0"
@@ -68,9 +66,7 @@ const AddAssignmentCard = ({
             </div>
             <div className="pb-2 text-lg font-semibold">/</div>
             <div className="flex flex-col gap-1">
-              <Label>
-                Points Possible
-              </Label>
+              <Label>Points Possible</Label>
               <Input
                 type="number"
                 placeholder="100"
