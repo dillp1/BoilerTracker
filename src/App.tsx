@@ -5,6 +5,7 @@ import type { Assignment } from "@/models/assignment";
 import AddCourseCard from "./components/AddCourseCard";
 import type { Course } from "./models/course";
 import CourseCard from "./components/CourseCard";
+import type { AssignmentType } from "./models/assignmentType";
 
 function App() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -19,6 +20,8 @@ function App() {
     if (name.trim() === "") {
       return;
     }
+    const course = courses.find((existing) => existing.id === courseId);
+    const defaultTypeId = course?.assignmentTypes[0]?.id ?? 0;
     const newId = Date.now();
     const newAssignmentItem: Assignment = {
       id: newId,
@@ -26,6 +29,7 @@ function App() {
       completed: false,
       pointsPossible: pointsPossible === "" ? 100 : pointsPossible,
       pointsEarned: pointsEarned === "" ? 0 : pointsEarned,
+      typeId: defaultTypeId,
     };
     setCourses(
       courses.map((course) =>
@@ -48,9 +52,39 @@ function App() {
       id: newId,
       name: newCourseName,
       assignments: [],
+      assignmentTypes: [],
     };
     setCourses([...courses, newCourseItem]);
     setNewCourseName("");
+  };
+
+  const addAssignmentType = (
+    courseId: number,
+    name: string,
+    weight: number | ""
+  ) => {
+    if (name.trim() === "") {
+      return;
+    }
+    const newId = Date.now();
+    const newAssignmentTypeItem: AssignmentType = {
+      id: newId,
+      name: name,
+      weight: weight === "" ? 0 : weight,
+    };
+    setCourses(
+      courses.map((course) =>
+        course.id === courseId
+          ? {
+              ...course,
+              assignmentTypes: [
+                ...course.assignmentTypes,
+                newAssignmentTypeItem,
+              ],
+            }
+          : course
+      )
+    );
   };
 
   const removeAssignment = (courseId: number, assignmentId: number) => {
@@ -150,6 +184,7 @@ function App() {
           onToggleComplete={toggleComplete}
           onUpdateAssignmentPoints={updateAssignmentPoints}
           onUpdateAssignmentText={updateAssignmentText}
+          onAddAssignmentType={addAssignmentType}
         />
       ))}
     </div>

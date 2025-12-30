@@ -33,6 +33,11 @@ type CourseCardProps = {
     earned: number,
     possible: number
   ) => void;
+  onAddAssignmentType: (
+    courseId: number,
+    name: string,
+    weight: number | ""
+  ) => void;
 };
 
 const CourseCard = ({
@@ -43,6 +48,7 @@ const CourseCard = ({
   onToggleComplete,
   onUpdateAssignmentText,
   onUpdateAssignmentPoints,
+  onAddAssignmentType,
 }: CourseCardProps) => {
   return (
     <div>
@@ -60,7 +66,13 @@ const CourseCard = ({
         </CardHeader>
         <CardContent>
           <div className="flex gap-flex flex-col gap-3">
-            <PointsCard assignments={course.assignments} />
+            <PointsCard
+              courseName={course.name}
+              courseId={course.id}
+              assignments={course.assignments}
+              assignmentTypes={course.assignmentTypes}
+              onAddAssignmentType={onAddAssignmentType}
+            />
             <AssignmentsCard
               courseId={course.id}
               courseName={course.name}
