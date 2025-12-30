@@ -4,4 +4,5 @@ export type Assignment = {
   completed: boolean;
   pointsPossible: number;
   pointsEarned: number;
+  typeId: number;
 }
